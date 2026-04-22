@@ -1,0 +1,349 @@
+[
+  {
+    "id": "RT3080",
+    "status": "paid",
+    "billFrom": {
+      "streetAddress": "19 Union Terrace",
+      "city": "London",
+      "postCode": "E1 3EZ",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Alex Grim",
+      "clientEmail": "alexgrim@mail.com",
+      "streetAddress": "84 Church Way",
+      "city": "Bradford",
+      "postCode": "BD1 9PB",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-08-20",
+    "paymentTerms": "Net 30 Days",
+    "dueDate": "2021-09-19",
+    "projectDescription": "Graphic Design",
+    "items": [
+      {
+        "id": "item-001",
+        "name": "Banner Design",
+        "quantity": 1,
+        "price": 156.0,
+        "total": 156.0
+      },
+      {
+        "id": "item-002",
+        "name": "Email Design",
+        "quantity": 2,
+        "price": 200.0,
+        "total": 400.0
+      }
+    ],
+    "totalAmount": 556.0
+  },
+  {
+    "id": "XM9141",
+    "status": "pending",
+    "billFrom": {
+      "streetAddress": "106 Kendell Street",
+      "city": "Sharling",
+      "postCode": "SK1 3GH",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Alysa Werner",
+      "clientEmail": "alysa.werner@mail.com",
+      "streetAddress": "44 Emerson Road",
+      "city": "Manchester",
+      "postCode": "M14 2PH",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-08-21",
+    "paymentTerms": "Net 30 Days",
+    "dueDate": "2021-09-20",
+    "projectDescription": "Re-branding",
+    "items": [
+      {
+        "id": "item-003",
+        "name": "Brand Guidelines",
+        "quantity": 1,
+        "price": 1800.9,
+        "total": 1800.9
+      },
+      {
+        "id": "item-004",
+        "name": "Logo Design",
+        "quantity": 1,
+        "price": 750.0,
+        "total": 750.0
+      },
+      {
+        "id": "item-005",
+        "name": "Business Card Design",
+        "quantity": 2,
+        "price": 125.0,
+        "total": 250.0
+      }
+    ],
+    "totalAmount": 2800.9
+  },
+  {
+    "id": "RG0314",
+    "status": "draft",
+    "billFrom": {
+      "streetAddress": "2 Garfield Terrace",
+      "city": "London",
+      "postCode": "E1 8EB",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Mellisa Clarke",
+      "clientEmail": "mellisa.clarke@mail.com",
+      "streetAddress": "46 Abbey Row",
+      "city": "Cambridge",
+      "postCode": "CB5 6EG",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-09-01",
+    "paymentTerms": "Net 7 Days",
+    "dueDate": "2021-09-08",
+    "projectDescription": "Website Redesign",
+    "items": [
+      {
+        "id": "item-006",
+        "name": "Website Redesign",
+        "quantity": 1,
+        "price": 5000.0,
+        "total": 5000.0
+      }
+    ],
+    "totalAmount": 5000.0
+  },
+  {
+    "id": "AA1449",
+    "status": "pending",
+    "billFrom": {
+      "streetAddress": "Apt. 556 Auf der Schüren 58",
+      "city": "Cologne",
+      "postCode": "50667",
+      "country": "Germany"
+    },
+    "billTo": {
+      "clientName": "Igbo Akunna",
+      "clientEmail": "akunna@mail.io",
+      "streetAddress": "34 Kur068 St.",
+      "city": "Lagos",
+      "postCode": "100001",
+      "country": "Nigeria"
+    },
+    "invoiceDate": "2021-09-10",
+    "paymentTerms": "Net 14 Days",
+    "dueDate": "2021-09-24",
+    "projectDescription": "Social Media Campaign",
+    "items": [
+      {
+        "id": "item-007",
+        "name": "Campaign Strategy",
+        "quantity": 1,
+        "price": 500.0,
+        "total": 500.0
+      },
+      {
+        "id": "item-008",
+        "name": "Content Creation",
+        "quantity": 4,
+        "price": 150.0,
+        "total": 600.0
+      },
+      {
+        "id": "item-009",
+        "name": "Ad Management",
+        "quantity": 1,
+        "price": 300.0,
+        "total": 300.0
+      }
+    ],
+    "totalAmount": 1400.0
+  },
+  {
+    "id": "TY9141",
+    "status": "paid",
+    "billFrom": {
+      "streetAddress": "19 Union Terrace",
+      "city": "London",
+      "postCode": "E1 3EZ",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Sophie Clarke",
+      "clientEmail": "sophie.clarke@gmail.com",
+      "streetAddress": "15 Rowan Avenue",
+      "city": "Liverpool",
+      "postCode": "L18 3HG",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-07-14",
+    "paymentTerms": "Net 7 Days",
+    "dueDate": "2021-07-21",
+    "projectDescription": "UI/UX Design",
+    "items": [
+      {
+        "id": "item-010",
+        "name": "UI Design",
+        "quantity": 1,
+        "price": 2000.0,
+        "total": 2000.0
+      },
+      {
+        "id": "item-011",
+        "name": "Prototype",
+        "quantity": 1,
+        "price": 800.0,
+        "total": 800.0
+      },
+      {
+        "id": "item-012",
+        "name": "Usability Testing",
+        "quantity": 2,
+        "price": 350.0,
+        "total": 700.0
+      }
+    ],
+    "totalAmount": 3500.0
+  },
+  {
+    "id": "FV2353",
+    "status": "draft",
+    "billFrom": {
+      "streetAddress": "3 Tottenham Lane",
+      "city": "London",
+      "postCode": "N8 9BL",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Liam Hughes",
+      "clientEmail": "liam.hughes@webworks.com",
+      "streetAddress": "7 Birch Close",
+      "city": "Edinburgh",
+      "postCode": "EH4 1TQ",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-10-05",
+    "paymentTerms": "Net 30 Days",
+    "dueDate": "2021-11-04",
+    "projectDescription": "Mobile App Development",
+    "items": [
+      {
+        "id": "item-013",
+        "name": "App Design",
+        "quantity": 1,
+        "price": 3500.0,
+        "total": 3500.0
+      },
+      {
+        "id": "item-014",
+        "name": "Frontend Development",
+        "quantity": 1,
+        "price": 5000.0,
+        "total": 5000.0
+      },
+      {
+        "id": "item-015",
+        "name": "Backend Integration",
+        "quantity": 1,
+        "price": 4000.0,
+        "total": 4000.0
+      },
+      {
+        "id": "item-016",
+        "name": "QA Testing",
+        "quantity": 3,
+        "price": 400.0,
+        "total": 1200.0
+      }
+    ],
+    "totalAmount": 13700.0
+  },
+  {
+    "id": "XC9152",
+    "status": "paid",
+    "billFrom": {
+      "streetAddress": "106 Kendell Street",
+      "city": "Sharling",
+      "postCode": "SK1 3GH",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Anita Wainwright",
+      "clientEmail": "anita.w@mail.com",
+      "streetAddress": "32 Sunset Drive",
+      "city": "Bristol",
+      "postCode": "BS1 4PR",
+      "country": "United Kingdom"
+    },
+    "invoiceDate": "2021-06-05",
+    "paymentTerms": "Net 14 Days",
+    "dueDate": "2021-06-19",
+    "projectDescription": "Annual Report Design",
+    "items": [
+      {
+        "id": "item-017",
+        "name": "Report Layout",
+        "quantity": 1,
+        "price": 1200.0,
+        "total": 1200.0
+      },
+      {
+        "id": "item-018",
+        "name": "Infographic Design",
+        "quantity": 5,
+        "price": 200.0,
+        "total": 1000.0
+      }
+    ],
+    "totalAmount": 2200.0
+  },
+  {
+    "id": "MT3080",
+    "status": "pending",
+    "billFrom": {
+      "streetAddress": "2 Garfield Terrace",
+      "city": "London",
+      "postCode": "E1 8EB",
+      "country": "United Kingdom"
+    },
+    "billTo": {
+      "clientName": "Emeka Obi",
+      "clientEmail": "emeka.obi@techsolutions.ng",
+      "streetAddress": "12 Admiralty Way",
+      "city": "Lekki",
+      "postCode": "106104",
+      "country": "Nigeria"
+    },
+    "invoiceDate": "2021-11-12",
+    "paymentTerms": "Net 30 Days",
+    "dueDate": "2021-12-12",
+    "projectDescription": "E-commerce Platform",
+    "items": [
+      {
+        "id": "item-019",
+        "name": "Homepage Design",
+        "quantity": 1,
+        "price": 1500.0,
+        "total": 1500.0
+      },
+      {
+        "id": "item-020",
+        "name": "Product Page Template",
+        "quantity": 3,
+        "price": 600.0,
+        "total": 1800.0
+      },
+      {
+        "id": "item-021",
+        "name": "Checkout Flow Design",
+        "quantity": 1,
+        "price": 900.0,
+        "total": 900.0
+      }
+    ],
+    "totalAmount": 4200.0
+  }
+]
