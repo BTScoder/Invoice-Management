@@ -92,7 +92,7 @@ function EditInvoiceForm() {
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<InvoiceFormValues>({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: invoice
@@ -165,7 +165,7 @@ function EditInvoiceForm() {
       <div className="relative lg:fixed lg:inset-0 lg:z-40">
         <div className="hidden lg:block lg:fixed lg:inset-0 lg:bg-black/50" />
 
-        <article className="relative z-10 h-full w-full lg:ml-[103px] lg:h-screen lg:w-[720px]">
+        <article className="relative z-10 h-full w-full lg:ml-25.75 lg:h-screen lg:w-180">
           <div className="h-full overflow-y-auto bg-white dark:bg-dark-bg lg:rounded-r-3xl lg:shadow-2xl">
             <div className="w-full rounded-2xl bg-white dark:bg-dark-bg px-6 py-8 shadow-sm lg:mx-0 lg:max-w-none lg:rounded-none lg:shadow-none">
               <p

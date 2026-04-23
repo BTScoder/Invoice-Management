@@ -1,6 +1,6 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
+// import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DATA from "../data/data.json";
 import type { InvoiceType, InvoiceFormValues } from "../types/invoice";
@@ -92,7 +92,7 @@ function Form() {
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<InvoiceFormValues>({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: {
