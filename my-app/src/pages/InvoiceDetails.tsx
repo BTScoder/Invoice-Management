@@ -59,7 +59,7 @@ function InvoiceDetails() {
     const updated = invoices.map((entry) =>
       entry.id === invoice.id ? { ...entry, status: "paid" } : entry,
     );
-    setInvoices(updated);
+    setInvoices(updated as InvoiceType[]);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
 
@@ -70,7 +70,7 @@ function InvoiceDetails() {
 
     const updated = invoices.filter((entry) => entry.id !== invoice.id);
 
-    setInvoices(updated);
+    setInvoices(updated as InvoiceType[]);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
     navigate("/");
