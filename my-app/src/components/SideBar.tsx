@@ -1,16 +1,46 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Logo from "./logo/Logo";
-import { Moon } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
+
+const THEME_KEY = "theme";
+
 export default function SideBar() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return (
+      document.documentElement.classList.contains("dark") ||
+      localStorage.getItem(THEME_KEY) === "dark"
+    );
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+  }, [isDark]);
+
   return (
-    <div className="lg:h-screen lg:w-25.75 bg-side rounded-tr-xl rounded-br-xl flex items-center justify-between pe-10">
+    <div className="bg-side dark:bg-dark-bg2 z-9999 flex h-20 w-full items-center justify-between overflow-hidden max-md:h-18 lg:h-full lg:w-25.75 lg:flex-col lg:rounded-r-3xl">
       <Logo />
 
-      <div className="lg:fixed lg:left-0 lg:inset-y-0 flex items-center lg:flex-col lg:pb-10 lg:justify-end  lg:w-25.75  gap-10">
-        <Moon className="h-8 w-8 border-none fill-icon border-b border-icon lg:mb-20" />
-
-        <div>
-          <p className="h-10 w-10 rounded-full bg-icon"></p>
+      <div className="flex gap-8 max-lg:h-full lg:w-full lg:flex-col">
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => setIsDark((value) => !value)}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="text-icon transition-opacity duration-150 ease-linear hover:opacity-50"
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        </div>
+        <div className="flex items-center justify-center border-[#494E6E] max-lg:h-full max-lg:border-l max-lg:px-6 lg:border-t lg:py-6">
+          {/* <img
+            src={avatar}
+            alt="User avatar"
+            className="size-10 object-contain"
+          /> */}
         </div>
       </div>
     </div>

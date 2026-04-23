@@ -1,0 +1,519 @@
+import { useFieldArray, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useParams } from "react-router-dom";
+import DATA from "../data/data.json";
+import type { InvoiceFormValues, InvoiceType } from "../types/invoice";
+import { InvoiceSchema } from "../types/invoice";
+import Invoices from "./Invoices";
+import { ChevronLeft } from "lucide-react";
+
+const STORAGE_KEY = "invoices";
+
+const getStoredInvoices = (): InvoiceType[] => {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as InvoiceType[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+// Where my invoice should come from ...the localStorage first or my local JSON file if the localStorage is empty
+const getInvoiceSeed = (): InvoiceType[] => {
+  const stored = getStoredInvoices();
+  if (stored.length > 0) {
+    return stored;
+  }
+
+  return DATA as InvoiceType[];
+};
+
+const getPaymentDays = (terms: InvoiceFormValues["paymentTerms"]) => {
+  const match = terms.match(/\d+/);
+  return match ? Number(match[0]) : 0;
+};
+
+const getDueDate = (
+  invoiceDate: string,
+  terms: InvoiceFormValues["paymentTerms"],
+) => {
+  const base = new Date(invoiceDate);
+  if (Number.isNaN(base.getTime())) {
+    return invoiceDate;
+  }
+
+  base.setDate(base.getDate() + getPaymentDays(terms));
+  return base.toISOString().slice(0, 10);
+};
+
+const getItemId = (index: number) => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `item-${Date.now()}-${index}`;
+};
+
+const mapInvoiceToFormValues = (invoice: InvoiceType): InvoiceFormValues => ({
+  address: invoice.billFrom.streetAddress,
+  city: invoice.billFrom.city,
+  postal: invoice.billFrom.postCode,
+  country: invoice.billFrom.country,
+  clientName: invoice.billTo.clientName,
+  clientEmail: invoice.billTo.clientEmail,
+  clientAddress: invoice.billTo.streetAddress,
+  clientCity: invoice.billTo.city,
+  clientPost: invoice.billTo.postCode,
+  clientCountry: invoice.billTo.country,
+  invoiceDate: invoice.invoiceDate,
+  paymentTerms: invoice.paymentTerms,
+  projectDescription: invoice.projectDescription,
+  items: invoice.items.map((item) => ({
+    name: item.name,
+    quantity: item.quantity,
+    price: item.price,
+    total: item.total,
+  })),
+});
+
+function EditInvoiceForm() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const invoices = getInvoiceSeed();
+  const invoice = invoices.find((entry) => entry.id === id);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<InvoiceFormValues>({
+    resolver: zodResolver(InvoiceSchema),
+    defaultValues: invoice
+      ? mapInvoiceToFormValues(invoice)
+      : {
+          items: [{ name: "", quantity: 1, price: 0, total: 0 }],
+        },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items",
+  });
+
+  if (!invoice) {
+    return <p>Invoice not found</p>;
+  }
+
+  const handleSaveChanges = handleSubmit((values) => {
+    const items = values.items.map((item, index) => {
+      const total = Number(item.quantity) * Number(item.price);
+      const existingId = invoice.items[index]?.id;
+
+      return {
+        ...item,
+        id: existingId ?? getItemId(index),
+        total,
+      };
+    });
+
+    const totalAmount = items.reduce((sum, item) => sum + item.total, 0);
+
+    const updated: InvoiceType = {
+      ...invoice,
+      billFrom: {
+        streetAddress: values.address,
+        city: values.city,
+        postCode: values.postal,
+        country: values.country,
+      },
+      billTo: {
+        clientName: values.clientName,
+        clientEmail: values.clientEmail,
+        streetAddress: values.clientAddress,
+        city: values.clientCity,
+        postCode: values.clientPost,
+        country: values.clientCountry,
+      },
+      invoiceDate: values.invoiceDate,
+      paymentTerms: values.paymentTerms,
+      dueDate: getDueDate(values.invoiceDate, values.paymentTerms),
+      projectDescription: values.projectDescription,
+      items,
+      totalAmount,
+    };
+
+    const next = invoices.map((entry) =>
+      entry.id === invoice.id ? updated : entry,
+    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    navigate(`/details/${invoice.id}`);
+  });
+
+  return (
+    <div className="relative">
+      <div className="hidden lg:block">
+        <Invoices />
+      </div>
+
+      <div className="relative lg:fixed lg:inset-0 lg:z-40">
+        <div className="hidden lg:block lg:fixed lg:inset-0 lg:bg-black/50" />
+
+        <article className="relative z-10 h-full w-full lg:ml-[103px] lg:h-screen lg:w-[720px]">
+          <div className="h-full overflow-y-auto bg-white dark:bg-dark-bg lg:rounded-r-3xl lg:shadow-2xl">
+            <div className="w-full rounded-2xl bg-white dark:bg-dark-bg px-6 py-8 shadow-sm lg:mx-0 lg:max-w-none lg:rounded-none lg:shadow-none">
+              <p
+                className="text-sm font-bold text-slate-600 dark:text-text-primary flex items-center gap-3"
+                onClick={() => navigate(-1)}
+              >
+                <ChevronLeft className="w-4 h-4 text-light-text mb-1" />
+                Go Back
+              </p>
+
+              <h2 className="mt-6 text-2xl font-bold text-slate-800 dark:text-text-primary">
+                Edit #{invoice.id}
+              </h2>
+
+              <form className="mt-8 space-y-8" onSubmit={handleSaveChanges}>
+                <section className="space-y-4">
+                  <p className="text-sm font-bold text-button">Bill From</p>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="address"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Street Address
+                    </label>
+                    <input
+                      id="address"
+                      type="text"
+                      {...register("address")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="city"
+                        className="text-sm font-semibold text-icon"
+                      >
+                        City
+                      </label>
+                      <input
+                        id="city"
+                        type="text"
+                        {...register("city")}
+                        className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="postal"
+                        className="text-sm font-semibold text-icon"
+                      >
+                        Post Code
+                      </label>
+                      <input
+                        id="postal"
+                        type="text"
+                        {...register("postal")}
+                        className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="country"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Country
+                    </label>
+                    <input
+                      id="country"
+                      type="text"
+                      {...register("country")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <p className="text-sm font-bold text-button">Bill To</p>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="clientName"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Client's Name
+                    </label>
+                    <input
+                      id="clientName"
+                      type="text"
+                      {...register("clientName")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="clientEmail"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Client's Email
+                    </label>
+                    <input
+                      id="clientEmail"
+                      type="email"
+                      {...register("clientEmail")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="clientAddress"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Street Address
+                    </label>
+                    <input
+                      id="clientAddress"
+                      type="text"
+                      {...register("clientAddress")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="clientCity"
+                        className="text-sm font-semibold text-icon"
+                      >
+                        City
+                      </label>
+                      <input
+                        id="clientCity"
+                        type="text"
+                        {...register("clientCity")}
+                        className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="clientPost"
+                        className="text-sm font-semibold text-icon"
+                      >
+                        Post Code
+                      </label>
+                      <input
+                        id="clientPost"
+                        type="text"
+                        {...register("clientPost")}
+                        className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="clientCountry"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Country
+                    </label>
+                    <input
+                      id="clientCountry"
+                      type="text"
+                      {...register("clientCountry")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+                </section>
+
+                <section className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="invoiceDate"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Invoice Date
+                    </label>
+                    <input
+                      id="invoiceDate"
+                      type="date"
+                      {...register("invoiceDate")}
+                      className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="paymentTerms"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Payment Terms
+                    </label>
+                    <select
+                      id="paymentTerms"
+                      {...register("paymentTerms")}
+                      className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    >
+                      <option value="">Select payment terms</option>
+                      <option value="Net 7 Days">Net 7 Days</option>
+                      <option value="Net 14 Days">Net 14 Days</option>
+                      <option value="Net 30 Days">Net 30 Days</option>
+                    </select>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col gap-2">
+                    <label
+                      htmlFor="projectDescription"
+                      className="text-sm font-semibold text-icon"
+                    >
+                      Project Description
+                    </label>
+                    <input
+                      id="projectDescription"
+                      type="text"
+                      {...register("projectDescription")}
+                      className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                    />
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <p className="text-lg font-bold text-slate-400 dark:text-light-text">
+                    Item List
+                  </p>
+
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-dark-bg2 p-4"
+                    >
+                      <div className="flex flex-col gap-2">
+                        <label
+                          htmlFor={`itemName${index}`}
+                          className="text-sm font-semibold text-icon"
+                        >
+                          Item Name
+                        </label>
+                        <input
+                          id={`itemName${index}`}
+                          type="text"
+                          {...register(`items.${index}.name`)}
+                          className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="flex flex-col gap-2">
+                          <label
+                            htmlFor={`itemQty${index}`}
+                            className="text-sm font-semibold text-icon"
+                          >
+                            Qty.
+                          </label>
+                          <input
+                            id={`itemQty${index}`}
+                            type="number"
+                            min="1"
+                            {...register(`items.${index}.quantity`, {
+                              valueAsNumber: true,
+                            })}
+                            className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <label
+                            htmlFor={`itemPrice${index}`}
+                            className="text-sm font-semibold text-icon"
+                          >
+                            Price
+                          </label>
+                          <input
+                            id={`itemPrice${index}`}
+                            type="number"
+                            step="0.01"
+                            {...register(`items.${index}.price`, {
+                              valueAsNumber: true,
+                            })}
+                            className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-button"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <label className="text-sm font-semibold text-icon">
+                            Total
+                          </label>
+                          <div className="flex h-12 items-center rounded-lg bg-gray-100 dark:bg-dark-bg2 px-4 text-sm font-bold text-icon">
+                            {(
+                              (watch(`items.${index}.quantity`) || 0) *
+                              (watch(`items.${index}.price`) || 0)
+                            ).toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="self-end text-sm font-semibold text-slate-400 dark:text-light-text hover:text-slate-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      append({ name: "", quantity: 1, price: 0, total: 0 })
+                    }
+                    className="w-full rounded-full bg-slate-100 dark:bg-dark-bg2 px-6 py-3 text-sm font-bold text-icon"
+                  >
+                    + Add New Item
+                  </button>
+                </section>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 dark:border-dark-bg2 pt-6 fixed bottom-0 left-0 right-0 lg:sticky bg-white dark:bg-dark-bg p-6 rounded-t-lg shadow-[0_-10px_20px_rgba(0,0,0,0.05)] ">
+                  <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="rounded-full bg-slate-100 dark:bg-dark-bg2 px-6 py-3 text-sm font-bold text-slate-500 dark:text-light-text"
+                  >
+                    Cancel
+                  </button>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="submit"
+                      className="rounded-full bg-button px-6 py-3 text-sm font-bold text-white bg-light-purple"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  );
+}
+
+export default EditInvoiceForm;

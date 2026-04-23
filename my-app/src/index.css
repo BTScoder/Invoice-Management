@@ -1,15 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=League+Spartan:wght@100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-league: "League Spartan", sans-serif;
   --color-background: #f8f8f8;
   --color-side: hsla(231, 20%, 27%, 1);
-  --color-logo-top: hsla(252, 100%, 73%, 1);
-  --color-logo-bottom: hsla(252, 94%, 67%, 1);
+  --color-light-purple: hsla(252, 100%, 73%, 1);
+  --color-dark-purple: hsl(252, 94%, 67%);
   --color-icon: hsla(231, 36%, 63%, 1);
   --color-light-text: hsla(231, 20%, 61%, 1);
   --color-text-primary: #dfe3fa;
-  --color-button: #7c5dfa;
-  --color-dark-bg: #252945;
+  /* --color-dark-bg: #252945; */
+  --color-dark-bg: #141625;
+  --color-dark-bg2: #252945;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-league);
+    background: var(--color-background);
+    color: #0f172a;
+  }
+
+  .dark body {
+    background: var(--color-dark-bg);
+    color: var(--color-text-primary);
+  }
 }
