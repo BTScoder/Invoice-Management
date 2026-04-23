@@ -17,10 +17,6 @@ function App() {
             <Route path="/new" element={<NewInvoiceForm />} />
             <Route path="/edit/:id" element={<EditInvoiceForm />} />
           </Routes>
-
-          {/* <article>
-            <Invoices />
-          </article> */}
         </main>
       </div>
     </>

@@ -1,6 +1,6 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-// import { z } from "zod";
+import { clsx } from "clsx";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DATA from "../data/data.json";
 import type { InvoiceType, InvoiceFormValues } from "../types/invoice";
@@ -92,7 +92,7 @@ function Form() {
     control,
     handleSubmit,
     watch,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<InvoiceFormValues>({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: {
@@ -177,61 +177,107 @@ function Form() {
           <p className="text-sm font-bold text-button">Bill From</p>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="address"
-              className="text-sm font-semibold text-icon"
-            >
-              Street Address
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="address"
+                className="text-sm font-semibold text-icon"
+              >
+                Street Address
+              </label>
+              {errors.address && (
+                <p className="text-[13px] text-red-600">
+                  {errors.address.message}
+                </p>
+              )}
+            </div>
             <input
               id="address"
               type="text"
               {...register("address")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.address ? "border-red-500 " : "border-gray-200",
+              )}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="city" className="text-sm font-semibold text-icon">
-                City
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="city"
+                  className="text-sm font-semibold text-icon"
+                >
+                  City
+                </label>
+                {errors.city && (
+                  <p className="text-[13px] text-red-500">
+                    {errors.city.message}
+                  </p>
+                )}
+              </div>
+
               <input
                 id="city"
                 type="text"
                 {...register("city")}
-                className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+                className={clsx(
+                  "rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                  errors.city ? "border-red-500" : "border-gray-200",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="postal"
-                className="text-sm font-semibold text-icon"
-              >
-                Post Code
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="postal"
+                  className="text-sm font-semibold text-icon"
+                >
+                  Post Code
+                </label>
+                {errors.postal && (
+                  <p className="text-[13px] text-red-500">
+                    {errors.postal.message}
+                  </p>
+                )}
+              </div>
+
               <input
                 id="postal"
                 type="text"
                 {...register("postal")}
-                className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+                className={clsx(
+                  "rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                  errors.postal ? "border-red-500" : "border-gray-200",
+                )}
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="country"
-              className="text-sm font-semibold text-icon"
-            >
-              Country
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="country"
+                className="text-sm font-semibold text-icon"
+              >
+                Country
+              </label>
+              {errors.country && (
+                <p className="text-[13px] text-red-500">
+                  {errors.country.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="country"
               type="text"
               {...register("country")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.country ? "border-red-500" : "border-gray-200",
+              )}
             />
           </div>
         </section>
@@ -240,94 +286,160 @@ function Form() {
           <p className="text-sm font-bold text-button">Bill To</p>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="clientName"
-              className="text-sm font-semibold text-icon"
-            >
-              Client's Name
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="clientName"
+                className="text-sm font-semibold text-icon"
+              >
+                Client's Name
+              </label>
+              {errors.clientName && (
+                <p className="text-[13px] text-red-500">
+                  {errors.clientName.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="clientName"
               type="text"
               {...register("clientName")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.clientName ? "border-red-500" : "border-gray-200",
+              )}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="clientEmail"
-              className="text-sm font-semibold text-icon"
-            >
-              Client's Email
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="clientEmail"
+                className="text-sm font-semibold text-icon"
+              >
+                Client's Email
+              </label>
+              {errors.clientEmail && (
+                <p className="text-[13px] text-red-500">
+                  {errors.clientEmail.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="clientEmail"
               type="email"
               {...register("clientEmail")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.clientEmail ? "border-red-500" : "border-gray-200",
+              )}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="clientAddress"
-              className="text-sm font-semibold text-icon"
-            >
-              Street Address
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="clientAddress"
+                className="text-sm font-semibold text-icon"
+              >
+                Street Address
+              </label>
+              {errors.clientAddress && (
+                <p className="text-[13px] text-red-500">
+                  {errors.clientAddress.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="clientAddress"
               type="text"
               {...register("clientAddress")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.clientAddress ? "border-red-500" : "border-gray-200",
+              )}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="clientCity"
-                className="text-sm font-semibold text-icon"
-              >
-                City
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="clientCity"
+                  className="text-sm font-semibold text-icon"
+                >
+                  City
+                </label>
+                {errors.clientCity && (
+                  <p className="text-[13px] text-red-500">
+                    {errors.clientCity.message}
+                  </p>
+                )}
+              </div>
+
               <input
                 id="clientCity"
                 type="text"
                 {...register("clientCity")}
-                className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+                className={clsx(
+                  "rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                  errors.clientCity ? "border-red-500" : "border-gray-200",
+                )}
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="clientPost"
-                className="text-sm font-semibold text-icon"
-              >
-                Post Code
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="clientPost"
+                  className="text-sm font-semibold text-icon"
+                >
+                  Post Code
+                </label>
+                {errors.clientPost && (
+                  <p className="text-[13px] text-red-500">
+                    {errors.clientPost.message}
+                  </p>
+                )}
+              </div>
+
               <input
                 id="clientPost"
                 type="text"
                 {...register("clientPost")}
-                className="rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+                className={clsx(
+                  "rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                  errors.clientPost ? "border-red-500" : "border-gray-200",
+                )}
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="clientCountry"
-              className="text-sm font-semibold text-icon"
-            >
-              Country
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="clientCountry"
+                className="text-sm font-semibold text-icon"
+              >
+                Country
+              </label>
+              {errors.clientCountry && (
+                <p className="text-[13px] text-red-500">
+                  {errors.clientCountry.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="clientCountry"
               type="text"
               {...register("clientCountry")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.clientCountry ? "border-red-500" : "border-gray-200",
+              )}
             />
           </div>
         </section>
@@ -368,17 +480,30 @@ function Form() {
           </div>
 
           <div className="col-span-2 flex flex-col gap-2">
-            <label
-              htmlFor="projectDescription"
-              className="text-sm font-semibold text-icon"
-            >
-              Project Description
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="projectDescription"
+                className="text-sm font-semibold text-icon"
+              >
+                Project Description
+              </label>
+              {errors.projectDescription && (
+                <p className="text-[13px] text-red-500">
+                  {errors.projectDescription.message}
+                </p>
+              )}
+            </div>
+
             <input
               id="projectDescription"
               type="text"
               {...register("projectDescription")}
-              className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+              className={clsx(
+                "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                errors.projectDescription
+                  ? "border-red-500"
+                  : "border-gray-200",
+              )}
             />
           </div>
         </section>
@@ -395,17 +520,31 @@ function Form() {
               className="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-dark-bg2 p-4"
             >
               <div className="flex flex-col gap-2">
-                <label
-                  htmlFor={`itemName${index}`}
-                  className="text-sm font-semibold text-icon"
-                >
-                  Item Name
-                </label>
+                <div>
+                  <label
+                    htmlFor={`itemName${index}`}
+                    className="text-sm font-semibold text-icon"
+                  >
+                    Item Name
+                  </label>
+
+                  {errors.items?.[index]?.name && (
+                    <p className="text-[13px] text-red-500">
+                      {errors.items[index].name.message}
+                    </p>
+                  )}
+                </div>
+
                 <input
                   id={`itemName${index}`}
                   type="text"
                   {...register(`items.${index}.name`)}
-                  className="w-full rounded-lg border-2 border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple"
+                  className={clsx(
+                    "w-full rounded-lg border border-gray-200 dark:border-dark-bg2 bg-white dark:bg-dark-bg2 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-text-primary outline-none focus:border-light-purple",
+                    errors?.items?.[index]?.name
+                      ? "border-red-500"
+                      : "border-gray-200",
+                  )}
                 />
               </div>
 
