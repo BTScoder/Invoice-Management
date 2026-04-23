@@ -71,7 +71,8 @@ function Invoices() {
               onClick={() => setIsFilterOpen((open) => !open)}
               className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-text-primary"
             >
-              <span>Filter by status</span>
+              <span className="lg:inline-block hidden">Filter by status</span>
+              <span className="lg:hidden">Filter</span>
               <ChevronDown
                 className={`h-4 w-4 text-button transition-transform ${
                   isFilterOpen ? "rotate-180" : "rotate-0"

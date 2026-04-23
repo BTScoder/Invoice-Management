@@ -8,7 +8,7 @@ type InvoiceProps = {
 
 function Invoice({ invoice }: InvoiceProps) {
   const statusStyles: Record<InvoiceType["status"], string> = {
-    paid: "bg-green-100 text-green-800 dark:bg-emerald-900/30 dark:text-emerald-300",
+    paid: "bg-green-100 text-green-500 dark:bg-emerald-900/30 dark:text-emerald-300",
     pending:
       "bg-yellow-100 text-yellow-800 dark:bg-amber-900/30 dark:text-amber-300",
     draft: "bg-gray-100 text-gray-700 dark:bg-slate-700/40 dark:text-slate-200",
@@ -16,7 +16,7 @@ function Invoice({ invoice }: InvoiceProps) {
 
   const statusDotStyles: Record<InvoiceType["status"], string> = {
     paid: "bg-green-800 dark:bg-emerald-300",
-    pending: "bg-yellow-800 dark:bg-amber-300",
+    pending: "bg-yellow-800 dark:bg-amber-300  ",
     draft: "bg-gray-700 dark:bg-slate-200",
   };
 
@@ -25,7 +25,7 @@ function Invoice({ invoice }: InvoiceProps) {
 
   return (
     <Link to={`/details/${invoice.id}`}>
-      <div className="p-5 rounded-lg bg-white dark:bg-dark-bg2 space-y-4 lg:hidden border border-transparent hover:border-dark-border hover:cursor-pointer transition-all duration-300 ease-in-out hover:dark:border-light-purple">
+      <div className="p-5 rounded-lg bg-white dark:bg-dark-bg2 space-y-4 lg:hidden border border-transparent hover:border-dark-border hover:cursor-pointer transition-all duration-300 ease-in-out hover:border-light-purple">
         <div className="flex items-center justify-between">
           <p className="font-bold dark:text-text-primary">
             <span className="text-light-text">#</span>
