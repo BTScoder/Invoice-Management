@@ -3,7 +3,7 @@ import DATA from "../data/data.json";
 import type { InvoiceType } from "../types/invoice";
 import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import DeleteModal from "../components/DeleteModal";
 const STORAGE_KEY = "invoices";
 
 const getStoredInvoices = (): InvoiceType[] => {
@@ -20,6 +20,7 @@ const getStoredInvoices = (): InvoiceType[] => {
   }
 };
 function InvoiceDetails() {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const storedInvoices = getStoredInvoices();
@@ -62,6 +63,19 @@ function InvoiceDetails() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
 
+  const handleDelete = () => {
+    // const confirmed = window.confirm("Delete this invoice?");
+
+    // if (!confirmed) return;
+
+    const updated = invoices.filter((entry) => entry.id !== invoice.id);
+
+    setInvoices(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+    navigate("/");
+  };
+
   return (
     <div>
       <p
@@ -99,6 +113,7 @@ function InvoiceDetails() {
             <button
               type="button"
               className="bg-red-500 hover:bg-red-500/80 text-white font-semibold text-sm px-6 py-3 rounded-full"
+              onClick={() => setShowModal(true)}
             >
               Delete
             </button>
@@ -143,7 +158,7 @@ function InvoiceDetails() {
                 Invoice Date
               </p>
               <p className="font-bold text-xl dark:text-text-primary">
-                {new Date(invoice.dueDate).toDateString()}
+                {new Date(invoice.invoiceDate).toDateString()}
               </p>
             </div>
 
@@ -231,6 +246,7 @@ function InvoiceDetails() {
             <button
               type="button"
               className="bg-red-500 text-white font-semibold text-sm px-6 py-3 rounded-full"
+              onClick={() => setShowModal(true)}
             >
               Delete
             </button>
@@ -238,7 +254,7 @@ function InvoiceDetails() {
               type="button"
               onClick={handleMarkAsPaid}
               disabled={!isPending}
-              className={`px-7 py-3 rounded-full text-sm font-semibold text-white ${
+              className={`px-7 py-3 rounded-full text-sm font-semibold bg-light-purple text-white cursor-pointer ${
                 isPending ? "bg-button" : "bg-slate-300"
               }`}
             >
@@ -247,6 +263,14 @@ function InvoiceDetails() {
           </div>
         </div>
       </article>
+
+      {showModal && (
+        <DeleteModal
+          invoiceId={invoice?.id}
+          onCancel={() => setShowModal(false)}
+          onConfirm={handleDelete}
+        />
+      )}
     </div>
   );
 }
