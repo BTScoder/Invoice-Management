@@ -37,7 +37,7 @@ export default function SideBar() {
         </div>
         <div className="flex items-center justify-center border-[#494E6E] max-lg:h-full max-lg:border-l max-lg:px-6 lg:border-t lg:py-6">
           <img
-            src="./public/avatar.png"
+            src="/avatar.png"
             alt="User avatar"
             className="size-10 object-contain"
           />
